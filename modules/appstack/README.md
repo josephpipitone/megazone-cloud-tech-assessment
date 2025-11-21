@@ -17,6 +17,7 @@ graph TB
     ALB --> EC2_2
     EC2_1 --> RDS
     EC2_2 --> RDS
+```
 
 ## Resources Created
 
