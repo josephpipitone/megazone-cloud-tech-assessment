@@ -5,7 +5,7 @@ This stack deploys the application layer on top of the existing infrastructure. 
 ## Application Components
 
 *   **Load Balancer:** An Application Load Balancer (ALB) listening on HTTP/HTTPS, forwarding traffic to the ASG.
-*   **Compute:** An Auto Scaling Group (ASG) launching Nginx web servers on Amazon Linux 2.
+*   **Compute:** An Auto Scaling Group (ASG) launching Nginx EC2 web servers on Amazon Linux instance types.
 *   **Database:** An RDS PostgreSQL instance.
 
 ## Architecture Diagram
