@@ -100,15 +100,6 @@ variable "user_data_script" {
   type        = string
 }
 
-variable "common_tags" {
-  type        = map(string)
-  description = "Map of tags to add to all resources"
-  default = {
-    "Owner"     = "joseph.pipitone@gmail.com"
-    "ManagedBy" = "terraform"
-  }
-}
-
 variable "ssh_keypair_name" {
   description = "Name of the SSH keypair"
   type        = string

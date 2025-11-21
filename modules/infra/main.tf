@@ -251,6 +251,24 @@ resource "aws_network_acl" "public" {
   vpc_id = aws_vpc.main.id
   subnet_ids = aws_subnet.public[*].id
 
+  ingress {
+    rule_no    = 100
+    protocol   = "-1"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  egress {
+    rule_no    = 100
+    protocol   = "-1"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
   tags = {
     Name        = "${local.base_name}-public-nacl-${local.env_suffix}"
     Environment = local.environment
@@ -261,6 +279,24 @@ resource "aws_network_acl" "private_app" {
   vpc_id = aws_vpc.main.id
   subnet_ids = aws_subnet.private_app[*].id
 
+  ingress {
+    rule_no    = 100
+    protocol   = "-1"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  egress {
+    rule_no    = 100
+    protocol   = "-1"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
   tags = {
     Name        = "${local.base_name}-private-app-nacl-${local.env_suffix}"
     Environment = local.environment
@@ -270,6 +306,24 @@ resource "aws_network_acl" "private_app" {
 resource "aws_network_acl" "private_database" {
   vpc_id = aws_vpc.main.id
   subnet_ids = aws_subnet.private_database[*].id
+
+  ingress {
+    rule_no    = 100
+    protocol   = "-1"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  egress {
+    rule_no    = 100
+    protocol   = "-1"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
 
   tags = {
     Name        = "${local.base_name}-private-database-nacl-${local.env_suffix}"

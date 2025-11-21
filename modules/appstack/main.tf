@@ -215,14 +215,6 @@ resource "aws_autoscaling_group" "main" {
     value               = local.environment
     propagate_at_launch = true
   }
-  dynamic "tag" {
-    for_each = var.common_tags
-    content {
-      key                 = tag.key
-      value               = tag.value
-      propagate_at_launch = true
-    }
-  }
 }
 
 resource "aws_autoscaling_policy" "cpu_target" {

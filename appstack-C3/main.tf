@@ -86,8 +86,4 @@ module "appstack" {
   ssh_keypair_name    = var.ssh_keypair_name
   user_data_script    = filebase64("user-data.sh")
   name_prefix         = var.name_prefix
-  common_tags = {
-    "Owner"     = "joseph.pipitone@gmail.com"
-    "ManagedBy" = "terraform"
-  }
 }
