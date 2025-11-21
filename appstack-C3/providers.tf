@@ -12,12 +12,13 @@ terraform {
 }
 
 provider "aws" {
-  region  = "us-east-1"
-  profile = "mzc-infra-prod"
+  region  = var.region
+  profile = var.profile
   default_tags {
     tags = {
-      Owner     = "joseph.pipitone@gmail.com"
-      ManagedBy = "Terraform"
+      Owner = var.owner
+      ManagedBy = "terraform"
+      Environment = var.environment
     }
   }
 }

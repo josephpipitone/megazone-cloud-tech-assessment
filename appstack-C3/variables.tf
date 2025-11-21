@@ -80,3 +80,18 @@ variable "desired_capacity" {
   type        = number
   default     = 2
 }
+
+variable "owner" {
+  description = "Owner email for tagging"
+  type        = string
+}
+
+variable "region" {
+  description = "AWS region"
+  type        = string
+}
+
+variable "profile" {
+  description = "AWS profile"
+  type        = string
+}

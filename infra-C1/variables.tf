@@ -19,7 +19,11 @@ variable "azs" {
 variable "region" {
   description = "AWS region"
   type        = string
-  default     = "us-east-1"
+}
+
+variable "profile" {
+  description = "AWS profile"
+  type        = string
 }
 
 variable "bastion_allowed_ip" {
@@ -50,4 +54,9 @@ variable "name_prefix" {
   description = "Prefix for resource names"
   type        = string
   default     = "mzcinfra"
+}
+
+variable "owner" {
+  description = "Owner email for tagging"
+  type        = string
 }

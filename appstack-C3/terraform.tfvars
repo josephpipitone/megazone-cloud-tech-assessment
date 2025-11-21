@@ -1,5 +1,6 @@
 certificate_arn        = "arn:aws:acm:us-east-1:740203489195:certificate/70c7c63c-b1b2-4046-bfea-f5810ff3377f"
 environment            = "non-production"
+owner                  = "joe@tslamars.com"
 vpc_name               = "mzcinfra-useast1-nonprod"
 name_prefix            = "mzcinfra"
 ssh_keypair_name       = "mzc-ssh-keypair"
@@ -12,3 +13,5 @@ instance_type          = "t3.micro"
 min_size               = 2
 max_size               = 4
 desired_capacity       = 2
+region                 = "us-east-1"
+profile                = "mzc-infra-prod"

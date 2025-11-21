@@ -62,15 +62,6 @@ variable "name_prefix" {
   default     = "mzcinfra"
 }
 
-variable "common_tags" {
-  type        = map(string)
-  description = "Map of tags to add to all resources"
-  default = {
-    "Owner"     = "joseph.pipitone@gmail.com"
-    "ManagedBy" = "terraform"
-  }
-}
-
 variable "subnet_config" {
   description = "Configuration for subnets"
   type = list(object({
