@@ -50,6 +50,35 @@ variable "db_engine_version" {
   type        = string
   default     = "16"
 }
+variable "db_engine" {
+  description = "Database engine type (e.g., postgres, mysql)"
+  type        = string
+  default     = "postgres"
+}
+
+variable "db_instance_class" {
+  description = "RDS instance class (e.g., db.t3.micro)"
+  type        = string
+  default     = "db.t3.micro"
+}
+
+variable "db_allocated_storage" {
+  description = "Allocated storage in GB"
+  type        = number
+  default     = 20
+}
+
+variable "db_multi_az" {
+  description = "Enable Multi-AZ deployment"
+  type        = bool
+  default     = false
+}
+
+variable "db_skip_final_snapshot" {
+  description = "Skip final snapshot on deletion (set to false for prod)"
+  type        = bool
+  default     = true
+}
 
 variable "instance_type" {
   description = "EC2 instance type"

@@ -241,16 +241,16 @@ resource "aws_db_subnet_group" "main" {
 
 resource "aws_db_instance" "main" {
   identifier             = "${local.base_name}-rds-${local.env_suffix}"
-  engine                 = "postgres"
+  engine                 = var.db_engine
   engine_version         = var.db_engine_version
-  instance_class         = "db.t3.micro"
-  allocated_storage      = 20
+  instance_class         = var.db_instance_class
+  allocated_storage      = var.db_allocated_storage
   username               = var.db_username
   password               = jsondecode(aws_secretsmanager_secret_version.main.secret_string)["password"]
   db_subnet_group_name   = aws_db_subnet_group.main.name
   vpc_security_group_ids = [var.database_sg_id]
-  multi_az               = false
-  skip_final_snapshot    = true
+  multi_az               = var.db_multi_az
+  skip_final_snapshot    = var.db_skip_final_snapshot
 
   tags = {
     Name        = "${local.base_name}-rds-${local.env_suffix}"
