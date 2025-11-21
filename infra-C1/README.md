@@ -48,7 +48,7 @@ Instead of hardcoding subnet ranges, I am calling the `hashicorp/subnets/cidr` m
 **Resulting Subnet Ranges:**
 
 *   **Public Subnets (a/b):** `10.0.0.0/28` and `10.0.0.16/28` (Small range for ALBs/Bastions).
-*   **Private App Subnets (a/b):** `10.0.0.32/27` and `10.0.0.64/27` (For ASG instances).
+*   **Private App Subnets (a/b):** `10.0.0.32/27` and `10.0.0.64/27` (For EC2 instances).
 *   **Private DB Subnets (a/b):** `10.0.0.96/27` and `10.0.0.128/27` (For RDS).
 
 ## Components

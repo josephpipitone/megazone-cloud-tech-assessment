@@ -19,11 +19,13 @@ variable "azs" {
 variable "region" {
   description = "AWS region"
   type        = string
+  default     = "us-east-1"
 }
 
 variable "profile" {
   description = "AWS profile"
   type        = string
+  default     = "mzc-infra-prod"
 }
 
 variable "bastion_allowed_ip" {
@@ -60,6 +62,7 @@ variable "owner" {
   description = "Owner email for tagging"
   type        = string
 }
+
 variable "subnet_config" {
   description = "Configuration for subnets"
   type = list(object({
