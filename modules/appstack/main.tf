@@ -17,6 +17,7 @@ data "aws_ami" "amazon_linux" {
 locals {
   environment = var.environment
   env_suffix = local.environment == "production" ? "prod" : "nonprod"
+  base_name   = var.name_prefix
 }
 
 data "aws_key_pair" "ssh" {
@@ -58,41 +59,45 @@ resource "aws_secretsmanager_secret_version" "connection_string" {
 }
 
 resource "aws_iam_policy" "secretsmanager" {
-  name = "mzc-iam-aws-${local.env_suffix}-secretsmanager-policy"
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "secretsmanager:GetSecretValue"
+  name = "${local.base_name}-iam-aws-${local.env_suffix}-secretsmanager-policy"
+  policy = <<EOF
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Action": [
+                    "secretsmanager:GetSecretValue"
+                ],
+                "Resource": [
+                    "${aws_secretsmanager_secret.main.arn}",
+                    "${aws_secretsmanager_secret.connection_string.arn}"
+                ],
+                "Effect": "Allow"
+            }
         ]
-        Effect   = "Allow"
-        Resource = [
-          aws_secretsmanager_secret.main.arn,
-          aws_secretsmanager_secret.connection_string.arn
-        ]
-      }
-    ]
-  })
+    }
+    EOF
   tags = {
     Environment = local.environment
   }
 }
 
 resource "aws_iam_role" "main" {
-  name = "mzc-iam-aws-${local.env_suffix}-ec2-role"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      }
-    ]
-  })
+  name = "${local.base_name}-iam-aws-${local.env_suffix}-ec2-role"
+  assume_role_policy = <<EOF
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Action": "sts:AssumeRole",
+                "Effect": "Allow",
+                "Principal": {
+                    "Service": "ec2.amazonaws.com"
+                }
+            }
+        ]
+    }
+    EOF
   tags = {
     Environment = local.environment
   }
@@ -109,19 +114,19 @@ resource "aws_iam_role_policy_attachment" "secretsmanager" {
 }
 
 resource "aws_lb" "main" {
-  name               = "mzc-alb-${local.env_suffix}"
+  name               = "${local.base_name}-alb-${local.env_suffix}"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [var.alb_sg_id]
   subnets            = var.public_subnet_ids
   tags = {
-    Name        = "mzc-alb-${local.env_suffix}"
+    Name        = "${local.base_name}-alb-${local.env_suffix}"
     Environment = local.environment
   }
 }
 
 resource "aws_lb_target_group" "main" {
-  name     = "mzc-tg-${local.env_suffix}"
+  name     = "${local.base_name}-tg-${local.env_suffix}"
   port     = 80
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.main.id
@@ -162,7 +167,7 @@ resource "aws_lb_listener" "http" {
 }
 
 resource "aws_launch_template" "main" {
-  name_prefix   = "mzc-lt-${local.env_suffix}-"
+  name_prefix   = "${local.base_name}-lt-${local.env_suffix}-"
   image_id      = data.aws_ami.amazon_linux.id
   instance_type = var.instance_type
   key_name      = data.aws_key_pair.ssh.key_name
@@ -182,13 +187,13 @@ resource "aws_launch_template" "main" {
   }
 
   tags = {
-    Name        = "mzc-asg-instance-${local.env_suffix}"
+    Name        = "${local.base_name}-asg-instance-${local.env_suffix}"
     Environment = local.environment
   }
 }
 
 resource "aws_autoscaling_group" "main" {
-  name                   = "mzc-asg-${local.env_suffix}"
+  name                   = "${local.base_name}-asg-${local.env_suffix}"
   min_size               = var.min_size
   max_size               = var.max_size
   desired_capacity       = var.desired_capacity
@@ -202,7 +207,7 @@ resource "aws_autoscaling_group" "main" {
 
   tag {
     key                 = "Name"
-    value               = "mzc-asg-instance-${local.env_suffix}"
+    value               = "${local.base_name}-asg-instance-${local.env_suffix}"
     propagate_at_launch = true
   }
   tag {
@@ -221,7 +226,7 @@ resource "aws_autoscaling_group" "main" {
 }
 
 resource "aws_autoscaling_policy" "cpu_target" {
-  name                   = "mzc-cpu-target-tracking-${local.env_suffix}"
+  name                   = "${local.base_name}-cpu-target-tracking-${local.env_suffix}"
   autoscaling_group_name = aws_autoscaling_group.main.name
   policy_type           = "TargetTrackingScaling"
 
@@ -234,16 +239,16 @@ resource "aws_autoscaling_policy" "cpu_target" {
 }
 
 resource "aws_db_subnet_group" "main" {
-  name       = "mzc-db-subnet-group-${local.env_suffix}"
+  name       = "${local.base_name}-db-subnet-group-${local.env_suffix}"
   subnet_ids = var.database_subnet_ids
   tags = {
-    Name        = "mzc-db-subnet-group-${local.env_suffix}"
+    Name        = "${local.base_name}-db-subnet-group-${local.env_suffix}"
     Environment = local.environment
   }
 }
 
 resource "aws_db_instance" "main" {
-  identifier             = "mzc-rds-${local.env_suffix}"
+  identifier             = "${local.base_name}-rds-${local.env_suffix}"
   engine                 = "postgres"
   engine_version         = var.db_engine_version
   instance_class         = "db.t3.micro"
@@ -256,7 +261,7 @@ resource "aws_db_instance" "main" {
   skip_final_snapshot    = true
 
   tags = {
-    Name        = "mzc-rds-${local.env_suffix}"
+    Name        = "${local.base_name}-rds-${local.env_suffix}"
     Environment = local.environment
   }
 }

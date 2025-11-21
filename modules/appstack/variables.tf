@@ -114,3 +114,9 @@ variable "ssh_keypair_name" {
   type        = string
   default     = "mzc-ssh-keypair"
 }
+
+variable "name_prefix" {
+  description = "Prefix for resource names"
+  type        = string
+  default     = "mzc"
+}

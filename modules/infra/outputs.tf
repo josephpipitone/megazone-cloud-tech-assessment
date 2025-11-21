@@ -40,7 +40,7 @@ output "app_sg_id" {
 
 output "data_sg_id" {
   description = "ID of the data security group"
-  value       = aws_security_group.data.id
+  value       = aws_security_group.database.id
 }
 
 output "alb_sg_id" {

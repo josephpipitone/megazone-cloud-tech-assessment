@@ -85,6 +85,7 @@ module "appstack" {
   db_secret_name      = "mzc-app-${var.environment == "production" ? "prod" : "nonprod"}-db-password2"
   ssh_keypair_name    = var.ssh_keypair_name
   user_data_script    = filebase64("user-data.sh")
+  name_prefix         = var.name_prefix
   common_tags = {
     "Owner"     = "joseph.pipitone@gmail.com"
     "ManagedBy" = "terraform"
