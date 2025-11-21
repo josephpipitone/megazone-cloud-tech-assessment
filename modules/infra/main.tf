@@ -21,40 +21,7 @@ module "subnet_addrs" {
   source          = "hashicorp/subnets/cidr"
 
   base_cidr_block = var.vpc_cidr
-  networks = [
-    {
-      name = "public-a",
-      new_bits = 8 # 10.0.0.0/24
-    },
-    {
-      name = "public-b",
-      new_bits = 8 # 10.0.1.0/24
-    },
-    {
-      name = "private-app-a",
-      new_bits = 7 # 10.0.2.0/23
-    },
-    {
-      name = "private-app-b",
-      new_bits = 7 # 10.0.4.0/23
-    },
-    {
-      name = "private-database-a",
-      new_bits = 7 # 10.0.6.0/23
-    },
-    {
-      name = "private-database-b",
-      new_bits = 7 # 10.0.8.0/23
-    },
-    {
-      name = null,
-      new_bits = 7 # 10.0.10.0/23 - Reserved for future use
-    },
-    {
-      name = null,
-      new_bits = 7 # 10.0.12.0/23 - Reserved for future use
-    },
-  ]
+  networks        = var.subnet_config
 }
 
 locals {

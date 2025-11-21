@@ -64,3 +64,11 @@ variable "common_tags" {
     "ManagedBy" = "terraform"
   }
 }
+
+variable "subnet_config" {
+  description = "Configuration for subnets"
+  type = list(object({
+    name     = string
+    new_bits = number
+  }))
+}
