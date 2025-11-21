@@ -1,5 +1,5 @@
-module "networking" {
-  source             = "../modules/networking"
+module "infra" {
+  source             = "../modules/infra"
   vpc_name           = "${var.name_prefix}-useast1-${var.environment == "production" ? "prod" : "nonprod"}"
   vpc_cidr           = var.vpc_cidr
   azs                = var.azs
