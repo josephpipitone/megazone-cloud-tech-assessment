@@ -51,7 +51,7 @@ graph TB
 
 Ensure `infra-C1` is deployed first. This stack reads VPC and Subnet information dynamically using data sources.
 
-1. Execute the init command from within the assignments directory
+1. Execute the init command
 
     ```text
     cd ./appstack-C3
@@ -69,9 +69,3 @@ Ensure `infra-C1` is deployed first. This stack reads VPC and Subnet information
     ```text
     terraform apply
     ```
-
-## Future Enhancements
-
-*   Validation: Utilize conditions to check for valid RDS engine names specified such as `postgres`, `mariadb`, `sql`, `oracle`, etc.
-*   Add a secret rotation resource to enable automatic secret rotation every 90 days, or whatever time period is appropriate.
-*   Utilize variable outputs to retrieve values for vpc name, subnet names and security groups instead of data sources.

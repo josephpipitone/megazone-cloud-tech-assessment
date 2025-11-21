@@ -251,7 +251,7 @@ resource "aws_network_acl" "public" {
   vpc_id = aws_vpc.main.id
   subnet_ids = aws_subnet.public[*].id
 
-  # Allow SSH from allowed IP (e.g., your home IP)
+  # Allow SSH from allowed IP
   ingress {
     rule_no    = 100
     protocol   = "tcp"
@@ -320,7 +320,7 @@ resource "aws_network_acl" "private_app" {
     to_port    = 22
   }
 
-  # Allow all traffic from within VPC (simplifies app <-> db communication)
+  # Allow all traffic from within VPC
   ingress {
     rule_no    = 110
     protocol   = "-1"
