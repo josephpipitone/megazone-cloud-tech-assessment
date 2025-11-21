@@ -205,8 +205,8 @@ resource "aws_security_group" "app" {
   }
 }
 
-resource "aws_security_group" "data" {
-  name_prefix = "data-"
+resource "aws_security_group" "database" {
+  name_prefix = "database-"
   vpc_id      = aws_vpc.main.id
   ingress {
     from_port       = 5432
