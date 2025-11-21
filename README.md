@@ -33,7 +33,7 @@ The solution must be deployed in order due to dependencies (`appstack-c3` relies
 
 2.  **Deploy App Stack:**
     ```bash
-    cd ../appstack-C3
+    cd appstack-C3
     terraform init
     terraform apply
     ```
@@ -42,6 +42,6 @@ The solution must be deployed in order due to dependencies (`appstack-c3` relies
 
 *   **VPC:** `10.0.0.0/20` base CIDR.
 *   **Dynamic Subnetting:** Uses `hashicorp/subnets/cidr` to calculate ranges automatically.
-*   **Compute:** Auto Scaling Group running Nginx on Amazon Linux.
+*   **Compute:** Auto Scaling Group running nginx on Amazon Linux.
 *   **Database:** RDS PostgreSQL.
-*   **Security:** Strict Security Groups.
+*   **Security:** Strict Security Groups and NACLs.
