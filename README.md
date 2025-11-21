@@ -43,5 +43,6 @@ The solution must be deployed in order due to dependencies (`appstack-c3` relies
 *   **VPC:** `10.0.0.0/20` base CIDR.
 *   **Dynamic Subnetting:** Uses `hashicorp/subnets/cidr` to calculate ranges automatically.
 *   **Compute:** Auto Scaling Group running nginx on Amazon Linux.
+*   **Load Balancing:** Application Load Balancer with TLS support.
 *   **Database:** RDS PostgreSQL.
 *   **Security:** Strict Security Groups and NACLs.
