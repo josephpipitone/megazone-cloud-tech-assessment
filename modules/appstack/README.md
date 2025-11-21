@@ -2,6 +2,22 @@
 
 This module deploys a flexible 3-tier web application architecture, including an Application Load Balancer, Auto Scaling Group with EC2 instances, and a configurable RDS database instance. Via `terraform.tfvars`, a user can select the database engine type and enable Multi-AZ deployment for high availability.
 
+## Architecture Diagram
+
+```mermaid
+graph TB
+    Internet((Internet))
+    ALB[Application Load Balancer]
+    EC2_1[EC2 Instance 1]
+    EC2_2[EC2 Instance 2]
+    RDS[RDS PostgreSQL]
+
+    Internet --> ALB
+    ALB --> EC2_1
+    ALB --> EC2_2
+    EC2_1 --> RDS
+    EC2_2 --> RDS
+
 ## Resources Created
 
 *   **Application Load Balancer (ALB):** Public-facing, handles HTTP/HTTPS traffic.
