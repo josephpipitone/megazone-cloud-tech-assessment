@@ -26,3 +26,33 @@ variable "ssh_keypair_name" {
   type        = string
   default     = "mzc-ssh-keypair"
 }
+
+variable "db_engine" {
+  description = "Database engine type"
+  type        = string
+  default     = "postgres"
+}
+
+variable "db_instance_class" {
+  description = "RDS instance class"
+  type        = string
+  default     = "db.t3.micro"
+}
+
+variable "db_allocated_storage" {
+  description = "Allocated storage in GB"
+  type        = number
+  default     = 20
+}
+
+variable "db_multi_az" {
+  description = "Enable Multi-AZ deployment"
+  type        = bool
+  default     = false
+}
+
+variable "db_skip_final_snapshot" {
+  description = "Skip final snapshot on deletion"
+  type        = bool
+  default     = true
+}

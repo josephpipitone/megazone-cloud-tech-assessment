@@ -1,5 +1,10 @@
-certificate_arn  = "arn:aws:acm:us-east-1:740203489195:certificate/70c7c63c-b1b2-4046-bfea-f5810ff3377f"
-environment      = "non-production"
-vpc_name         = "mzcinfra-useast1-nonprod"
-name_prefix      = "mzcinfra"
-ssh_keypair_name = "mzc-ssh-keypair"
+certificate_arn        = "arn:aws:acm:us-east-1:740203489195:certificate/70c7c63c-b1b2-4046-bfea-f5810ff3377f"
+environment            = "non-production"
+vpc_name               = "mzcinfra-useast1-nonprod"
+name_prefix            = "mzcinfra"
+ssh_keypair_name       = "mzc-ssh-keypair"
+db_engine              = "postgres"
+db_instance_class      = "db.t3.micro"
+db_allocated_storage   = 20
+db_multi_az            = false
+db_skip_final_snapshot = true

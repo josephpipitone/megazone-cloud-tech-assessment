@@ -72,18 +72,23 @@ data "aws_security_groups" "database" {
 }
 
 module "appstack" {
-  source              = "../modules/appstack"
-  environment         = var.environment
-  vpc_name            = var.vpc_name
-  public_subnet_ids   = data.aws_subnets.public.ids
-  app_subnet_ids      = data.aws_subnets.app.ids
-  database_subnet_ids = data.aws_subnets.database.ids
-  alb_sg_id           = data.aws_security_groups.alb.ids[0]
-  app_sg_id           = data.aws_security_groups.app.ids[0]
-  database_sg_id      = data.aws_security_groups.database.ids[0]
-  certificate_arn     = var.certificate_arn
-  db_secret_name      = "mzc-app-${var.environment == "production" ? "prod" : "nonprod"}-db-password3"
-  ssh_keypair_name    = var.ssh_keypair_name
-  user_data_script    = filebase64("user-data.sh")
-  name_prefix         = var.name_prefix
+  source                 = "../modules/appstack"
+  environment            = var.environment
+  vpc_name               = var.vpc_name
+  public_subnet_ids      = data.aws_subnets.public.ids
+  app_subnet_ids         = data.aws_subnets.app.ids
+  database_subnet_ids    = data.aws_subnets.database.ids
+  alb_sg_id              = data.aws_security_groups.alb.ids[0]
+  app_sg_id              = data.aws_security_groups.app.ids[0]
+  database_sg_id         = data.aws_security_groups.database.ids[0]
+  certificate_arn        = var.certificate_arn
+  db_secret_name         = "mzc-app-${var.environment == "production" ? "prod" : "nonprod"}-db-password3"
+  ssh_keypair_name       = var.ssh_keypair_name
+  user_data_script       = filebase64("user-data.sh")
+  db_engine              = var.db_engine
+  db_instance_class      = var.db_instance_class
+  db_allocated_storage   = var.db_allocated_storage
+  db_multi_az            = var.db_multi_az
+  db_skip_final_snapshot = var.db_skip_final_snapshot
+  name_prefix            = var.name_prefix
 }
