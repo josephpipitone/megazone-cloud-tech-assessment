@@ -82,7 +82,7 @@ module "appstack" {
   app_sg_id              = data.aws_security_groups.app.ids[0]
   database_sg_id         = data.aws_security_groups.database.ids[0]
   certificate_arn        = var.certificate_arn
-  db_secret_name         = "mzc-app-${var.environment == "production" ? "prod" : "nonprod"}-db-password4"
+  db_secret_name         = "mzc-app-${var.environment == "production" ? "prod" : "nonprod"}-db-password6"
   ssh_keypair_name       = var.ssh_keypair_name
   user_data_script       = filebase64("user-data.sh")
   db_engine              = var.db_engine

@@ -251,15 +251,46 @@ resource "aws_network_acl" "public" {
   vpc_id = aws_vpc.main.id
   subnet_ids = aws_subnet.public[*].id
 
+  # Allow SSH from allowed IP (e.g., your home IP)
   ingress {
     rule_no    = 100
-    protocol   = "-1"
+    protocol   = "tcp"
     action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 0
-    to_port    = 0
+    cidr_block = var.bastion_allowed_ip
+    from_port  = 22
+    to_port    = 22
   }
 
+  # Allow HTTP/HTTPS from anywhere (for ALB)
+  ingress {
+    rule_no    = 110
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 80
+    to_port    = 80
+  }
+
+  ingress {
+    rule_no    = 120
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 443
+    to_port    = 443
+  }
+
+  # Allow ephemeral ports for return traffic
+  ingress {
+    rule_no    = 130
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 1024
+    to_port    = 65535
+  }
+
+  # Allow all outbound
   egress {
     rule_no    = 100
     protocol   = "-1"
@@ -279,15 +310,37 @@ resource "aws_network_acl" "private_app" {
   vpc_id = aws_vpc.main.id
   subnet_ids = aws_subnet.private_app[*].id
 
+  # Allow SSH from bastion IP
   ingress {
     rule_no    = 100
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = var.bastion_allowed_ip
+    from_port  = 22
+    to_port    = 22
+  }
+
+  # Allow all traffic from within VPC (simplifies app <-> db communication)
+  ingress {
+    rule_no    = 110
     protocol   = "-1"
     action     = "allow"
-    cidr_block = "0.0.0.0/0"
+    cidr_block = var.vpc_cidr
     from_port  = 0
     to_port    = 0
   }
 
+  # Allow ephemeral ports for return traffic
+  ingress {
+    rule_no    = 120
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 1024
+    to_port    = 65535
+  }
+
+  # Allow all outbound (to internet via NAT and internal VPC traffic)
   egress {
     rule_no    = 100
     protocol   = "-1"
@@ -307,22 +360,24 @@ resource "aws_network_acl" "private_database" {
   vpc_id = aws_vpc.main.id
   subnet_ids = aws_subnet.private_database[*].id
 
+  # Allow DB traffic from within VPC
   ingress {
     rule_no    = 100
-    protocol   = "-1"
+    protocol   = "tcp"
     action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 0
-    to_port    = 0
+    cidr_block = var.vpc_cidr
+    from_port  = 5432
+    to_port    = 5432
   }
 
+  # Allow return traffic to VPC (ephemeral ports for app responses)
   egress {
     rule_no    = 100
-    protocol   = "-1"
+    protocol   = "tcp"
     action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 0
-    to_port    = 0
+    cidr_block = var.vpc_cidr
+    from_port  = 1024
+    to_port    = 65535
   }
 
   tags = {
