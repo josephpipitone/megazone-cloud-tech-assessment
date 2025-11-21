@@ -280,7 +280,7 @@ resource "aws_network_acl" "private_database" {
 resource "aws_instance" "bastion" {
   count                   = var.create_bastion ? 1 : 0
   ami                     = data.aws_ami.amazon_linux.id
-  instance_type           = "t3.micro"
+  instance_type           = var.bastion_instance_type
   key_name                = aws_key_pair.ssh.key_name
   subnet_id               = aws_subnet.public[0].id
   vpc_security_group_ids  = [aws_security_group.bastion.id]

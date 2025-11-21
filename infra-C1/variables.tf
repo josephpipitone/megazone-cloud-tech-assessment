@@ -34,6 +34,12 @@ variable "create_bastion" {
   default     = true
 }
 
+variable "bastion_instance_type" {
+  description = "Instance type for bastion host"
+  type        = string
+  default     = "t3.micro"
+}
+
 variable "environment" {
   description = "Deployment environment"
   type        = string

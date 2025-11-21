@@ -44,6 +44,12 @@ variable "bastion_key_name" {
   default     = null
 }
 
+variable "bastion_instance_type" {
+  description = "Instance type for bastion host"
+  type        = string
+  default     = "t3.micro"
+}
+
 variable "ssh_keypair_name" {
   description = "Name of the SSH keypair"
   type        = string

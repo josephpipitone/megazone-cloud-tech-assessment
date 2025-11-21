@@ -6,6 +6,7 @@ module "infra" {
   region             = var.region
   bastion_allowed_ip = var.bastion_allowed_ip
   create_bastion     = var.create_bastion
+  bastion_instance_type = var.bastion_instance_type
   environment        = var.environment
   name_prefix        = var.name_prefix
   subnet_config = [
