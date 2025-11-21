@@ -1,4 +1,4 @@
-# Application Stack (appstack-C3)
+# Assignment C3: Highly Available and Fault-Tolerant Application Stack (appstack-C3)
 
 This stack deploys the application layer on top of the existing infrastructure. It instantiates the reusable `modules/appstack` module, passing in environment-specific configurations via `terraform.tfvars`.
 
@@ -25,52 +25,53 @@ graph TB
     EC2_2 --> RDS
 ```
 
-## Inputs & Overrides
+## Input Variables
 
-The following variables in `terraform.tfvars` can be used to override the default values:
-
-### Database Configuration
-*   `db_engine`: The database engine (e.g., `postgres`, `mysql`).
-*   `db_instance_class`: The RDS instance type (e.g., `db.t3.micro`).
-*   `db_allocated_storage`: Storage size in GB.
-*   `db_multi_az`: Enable Multi-AZ for high availability.
-*   `db_skip_final_snapshot`: Whether to skip the final snapshot on deletion.
-
-### Application & General Configuration
-*   `certificate_arn`: The ARN of the ACM certificate for the ALB (HTTPS).
-*   `environment`: The deployment environment (e.g., `production`, `non-production`).
-*   `owner`: Email address for the `Owner` tag applied to resources.
-*   `ssh_keypair_name`: The name of the SSH key pair for EC2 instances.
-*   `instance_type`: The EC2 instance type for the Auto Scaling Group (e.g., `t3.micro`).
-
-### Auto Scaling Group (ASG) Configuration
-*   `min_size`: Minimum number of instances in the ASG.
-*   `max_size`: Maximum number of instances in the ASG.
-*   `desired_capacity`: Desired number of instances to run.
-
-### Example `terraform.tfvars`
-
-```hcl
-environment            = "production"
-owner                  = "team-lead@example.com"
-ssh_keypair_name       = "prod-ssh-key"
-certificate_arn        = "arn:aws:acm:us-east-1:123456789012:certificate/abc-123"
-db_engine              = "postgres"
-db_instance_class      = "db.t3.medium"
-db_allocated_storage   = 50
-db_multi_az            = true
-db_skip_final_snapshot = false
-instance_type          = "t3.small"
-min_size               = 2
-max_size               = 10
-desired_capacity       = 4
-```
+| Name | Description | Type | Default |
+|------|-------------|------|---------|
+| `vpc_name` | Name of the VPC | `string` | `mzcinfra-useast1-production` |
+| `certificate_arn` | ARN of the SSL certificate for ALB | `string` | `-` |
+| `environment` | Deployment environment | `string` | `production` |
+| `name_prefix` | Prefix for resource names | `string` | `mzcinfra` |
+| `ssh_keypair_name` | Name of the SSH keypair | `string` | `mzc-ssh-keypair` |
+| `db_engine` | Database engine type | `string` | `postgres` |
+| `db_instance_class` | RDS instance class | `string` | `db.t3.micro` |
+| `db_allocated_storage` | Allocated storage in GB | `number` | `20` |
+| `db_multi_az` | Enable Multi-AZ deployment | `bool` | `false` |
+| `db_skip_final_snapshot` | Skip final snapshot on deletion | `bool` | `true` |
+| `instance_type` | EC2 instance type | `string` | `t3.micro` |
+| `min_size` | Min size of ASG | `number` | `2` |
+| `max_size` | Max size of ASG | `number` | `4` |
+| `desired_capacity` | Desired capacity of ASG | `number` | `2` |
+| `owner` | Owner email for tagging | `string` | `-` |
+| `region` | AWS region | `string` | `-` |
+| `profile` | AWS profile | `string` | `-` |
 
 ## Deployment
 
 Ensure `infra-C1` is deployed first. This stack reads VPC and Subnet information dynamically using data sources.
 
+1. Execute the init command from within the assignments directory
+
+    ```text
+    cd ./appstack-C3
+    terraform init
+    ```
+
+2. Execute plan and validate resource creation
+
+    ```text
+    terraform plan
+    ```
+
+3. Execute apply
+
+    ```text
+    terraform apply
+    ```
+
 ## Future Enhancements
 
 *   Validation: Utilize conditions to check for valid RDS engine names specified such as `postgres`, `mariadb`, `sql`, `oracle`, etc.
 *   Add a secret rotation resource to enable automatic secret rotation every 90 days, or whatever time period is appropriate.
+*   Utilize variable outputs to retrieve values for vpc name, subnet names and security groups instead of data sources.
