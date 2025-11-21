@@ -9,38 +9,5 @@ module "infra" {
   bastion_instance_type = var.bastion_instance_type
   environment           = var.environment
   name_prefix           = var.name_prefix
-  subnet_config = [
-    {
-      name     = "public-a"
-      new_bits = 8
-    },
-    {
-      name     = "public-b"
-      new_bits = 8
-    },
-    {
-      name     = "private-app-a"
-      new_bits = 7
-    },
-    {
-      name     = "private-app-b"
-      new_bits = 7
-    },
-    {
-      name     = "private-database-a"
-      new_bits = 7
-    },
-    {
-      name     = "private-database-b"
-      new_bits = 7
-    },
-    {
-      name     = null
-      new_bits = 7
-    },
-    {
-      name     = null
-      new_bits = 7
-    }
-  ]
+  subnet_config         = var.subnet_config
 }

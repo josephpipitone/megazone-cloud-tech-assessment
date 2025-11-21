@@ -1,6 +1,6 @@
 # Megazone Cloud Tech Assessment
 
-This repository contains the Infrastructure as Code (IaC) for the Megazone Cloud Tech Assessment. For both the C1 and C3 assignments, I structured the solution using Terraform modules — this is my standard way of working because it promotes reusability and keeps everything clean and maintainable. In a real production environment, these modules would live in a centralized module repo, allowing any team or project to source and reuse them consistently with a simple reference:
+This repository contains the Infrastructure as Code (IaC) for the Megazone Cloud Tech Assessment. For both the C1 and C3 assignments, I structured the solution using Terraform modules — this is my standard way of working because it promotes reusability and keeps everything clean and maintainable. In a real production environment, these modules could live in a centralized module repo, allowing any team or project to source and reuse them consistently with a simple reference:
 
 ```hcl
  source = "http://fqdn/path-to-module/shared-modules//submodule-name?param=param"

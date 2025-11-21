@@ -16,8 +16,8 @@ provider "aws" {
   profile = var.profile
   default_tags {
     tags = {
-      Owner = var.owner
-      ManagedBy = "terraform"
+      Owner       = var.owner
+      ManagedBy   = "terraform"
       Environment = var.environment
     }
   }

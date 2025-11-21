@@ -60,3 +60,10 @@ variable "owner" {
   description = "Owner email for tagging"
   type        = string
 }
+variable "subnet_config" {
+  description = "Configuration for subnets"
+  type = list(object({
+    name     = string
+    new_bits = number
+  }))
+}
