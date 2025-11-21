@@ -8,3 +8,7 @@ db_instance_class      = "db.t3.micro"
 db_allocated_storage   = 20
 db_multi_az            = false
 db_skip_final_snapshot = true
+instance_type          = "t3.micro"
+min_size               = 2
+max_size               = 4
+desired_capacity       = 2

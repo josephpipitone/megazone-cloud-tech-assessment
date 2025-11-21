@@ -56,3 +56,27 @@ variable "db_skip_final_snapshot" {
   type        = bool
   default     = true
 }
+
+variable "instance_type" {
+  description = "EC2 instance type"
+  type        = string
+  default     = "t3.micro"
+}
+
+variable "min_size" {
+  description = "Min size of ASG"
+  type        = number
+  default     = 2
+}
+
+variable "max_size" {
+  description = "Max size of ASG"
+  type        = number
+  default     = 4
+}
+
+variable "desired_capacity" {
+  description = "Desired capacity of ASG"
+  type        = number
+  default     = 2
+}
