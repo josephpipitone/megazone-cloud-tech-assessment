@@ -1,7 +1,7 @@
 certificate_arn        = "arn:aws:acm:us-east-1:740203489195:certificate/70c7c63c-b1b2-4046-bfea-f5810ff3377f"
 environment            = "production"
 owner                  = "joe@tslamars.com"
-vpc_name               = "mzcinfra-useast1-nonprod"
+vpc_name               = "mzcinfra-useast1-prod"
 name_prefix            = "mzcinfra"
 ssh_keypair_name       = "mzc-ssh-keypair"
 db_engine              = "postgres"
