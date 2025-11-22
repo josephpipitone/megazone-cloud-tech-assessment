@@ -401,6 +401,16 @@ resource "aws_network_acl" "private_app" {
     }
   }
 
+  # Allow outbound to internet (via NAT gateway)
+  egress {
+    rule_no    = 220
+    protocol   = "-1"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
   tags = {
     Name        = "${local.base_name}-private-app-nacl-${local.env_suffix}"
     Environment = local.environment
