@@ -1,5 +1,5 @@
 certificate_arn        = "arn:aws:acm:us-east-1:740203489195:certificate/70c7c63c-b1b2-4046-bfea-f5810ff3377f"
-environment            = "non-production"
+environment            = "production"
 owner                  = "joe@tslamars.com"
 vpc_name               = "mzcinfra-useast1-nonprod"
 name_prefix            = "mzcinfra"

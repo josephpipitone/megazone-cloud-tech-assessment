@@ -27,25 +27,25 @@ graph TD
 
 ## Input Variables
 
-| Name | Description | Type | Default |
-|------|-------------|------|---------|
-| `vpc_name` | Name of the VPC | `string` | `mzcinfra-useast1-production` |
-| `certificate_arn` | ARN of the SSL certificate for ALB | `string` | `-` |
-| `environment` | Deployment environment | `string` | `production` |
-| `name_prefix` | Prefix for resource names | `string` | `mzcinfra` |
-| `ssh_keypair_name` | Name of the SSH keypair | `string` | `mzc-ssh-keypair` |
-| `db_engine` | Database engine type | `string` | `postgres` |
-| `db_instance_class` | RDS instance class | `string` | `db.t3.micro` |
-| `db_allocated_storage` | Allocated storage in GB | `number` | `20` |
-| `db_multi_az` | Enable Multi-AZ deployment | `bool` | `false` |
-| `db_skip_final_snapshot` | Skip final snapshot on deletion | `bool` | `true` |
-| `instance_type` | EC2 instance type | `string` | `t3.micro` |
-| `min_size` | Min size of ASG | `number` | `2` |
-| `max_size` | Max size of ASG | `number` | `4` |
-| `desired_capacity` | Desired capacity of ASG | `number` | `2` |
-| `owner` | Owner email for tagging | `string` | `-` |
-| `region` | AWS region | `string` | `-` |
-| `profile` | AWS profile | `string` | `-` |
+| Name                    | Description                               | Type     | Default                          |
+|-------------------------|-------------------------------------------|----------|----------------------------------|
+| `vpc_name`              | Name of the VPC                           | `string` | `mzcinfra-useast1-production`    |
+| `certificate_arn`       | ARN of the SSL certificate for ALB        | `string` | `-`                              |
+| `environment`           | Deployment environment                    | `string` | `production`                     |
+| `name_prefix`           | Prefix for resource names                 | `string` | `mzcinfra`                       |
+| `ssh_keypair_name`      | Name of the SSH keypair                   | `string` | `mzc-ssh-keypair`                |
+| `db_engine`             | Database engine type                      | `string` | `postgres`                       |
+| `db_instance_class`     | RDS instance class                        | `string` | `db.t3.micro`                    |
+| `db_allocated_storage`  | Allocated storage in GB                   | `number`  | `20`                             |
+| `db_multi_az`           | Enable Multi-AZ deployment                | `bool`   | `false`                          |
+| `db_skip_final_snapshot`| Skip final snapshot on deletion           | `bool`   | `true`                           |
+| `instance_type`         | EC2 instance type                         | `string` | `t3.micro`                       |
+| `min_size`              | Min size of ASG                           | `number` | `2`                              |
+| `max_size`              | Max size of ASG                           | `number` | `4`                              |
+| `desired_capacity`      | Desired capacity of ASG                   | `number` | `2`                              |
+| `owner`                 | Owner email for tagging                   | `string` | `-`                              |
+| `region`                | AWS region                                | `string` | `-`                              |
+| `profile`               | AWS profile                               | `string` | `-`                              |
 
 ## Deployment
 
