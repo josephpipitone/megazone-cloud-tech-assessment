@@ -510,3 +510,4 @@ resource "aws_instance" "bastion" {
     Environment = local.environment
   }
 }
+
