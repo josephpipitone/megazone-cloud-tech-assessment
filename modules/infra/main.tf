@@ -18,18 +18,16 @@ resource "aws_key_pair" "ssh" {
 }
 
 module "subnet_addrs" {
-  source          = "hashicorp/subnets/cidr"
+  source = "hashicorp/subnets/cidr"
 
   base_cidr_block = var.vpc_cidr
   networks        = var.subnet_config
 }
 
 locals {
-  environment = var.environment
-  env_suffix  = local.environment == "production" ? "prod" : "nonprod"
-  base_name   = var.name_prefix
-  
-  # Subnet CIDR blocks for NACL rules
+  environment           = var.environment
+  env_suffix            = local.environment == "production" ? "prod" : "nonprod"
+  base_name             = var.name_prefix
   public_subnet_cidrs   = [for s in aws_subnet.public : s.cidr_block]
   app_subnet_cidrs      = [for s in aws_subnet.private_app : s.cidr_block]
   database_subnet_cidrs = [for s in aws_subnet.private_database : s.cidr_block]
@@ -59,7 +57,7 @@ resource "aws_subnet" "private_app" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = module.subnet_addrs.network_cidr_blocks["private-app-${substr(var.azs[count.index], -1, 1)}"]
   availability_zone = var.azs[count.index]
-  tags =  {
+  tags = {
     Name        = "${local.base_name}-private-app-${var.azs[count.index]}-${local.env_suffix}"
     Environment = local.environment
   }
@@ -85,7 +83,7 @@ resource "aws_internet_gateway" "main" {
 }
 
 resource "aws_eip" "nat" {
-  count = length(var.azs)
+  count  = length(var.azs)
   domain = "vpc"
   tags = {
     Name        = "${local.base_name}-nat-eip-${count.index + 1}-${local.env_suffix}"
@@ -122,7 +120,7 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_route_table" "private_app" {
-  count = length(var.azs)
+  count  = length(var.azs)
   vpc_id = aws_vpc.main.id
   route {
     cidr_block     = "0.0.0.0/0"
@@ -141,7 +139,7 @@ resource "aws_route_table_association" "private_app" {
 }
 
 resource "aws_route_table" "private_database" {
-  count = length(var.azs)
+  count  = length(var.azs)
   vpc_id = aws_vpc.main.id
   # No internet route - database subnets should not have outbound internet access
   tags = {
@@ -197,7 +195,7 @@ resource "aws_security_group" "app" {
     to_port         = 22
     protocol        = "tcp"
     security_groups = [aws_security_group.bastion.id]
-}
+  }
   egress {
     from_port   = 0
     to_port     = 0
@@ -485,12 +483,12 @@ resource "aws_network_acl" "private_database" {
 }
 
 resource "aws_instance" "bastion" {
-  count                   = var.create_bastion ? 1 : 0
-  ami                     = data.aws_ami.amazon_linux.id
-  instance_type           = var.bastion_instance_type
-  key_name                = aws_key_pair.ssh.key_name
-  subnet_id               = aws_subnet.public[0].id
-  vpc_security_group_ids  = [aws_security_group.bastion.id]
+  count                       = var.create_bastion ? 1 : 0
+  ami                         = data.aws_ami.amazon_linux.id
+  instance_type               = var.bastion_instance_type
+  key_name                    = aws_key_pair.ssh.key_name
+  subnet_id                   = aws_subnet.public[0].id
+  vpc_security_group_ids      = [aws_security_group.bastion.id]
   associate_public_ip_address = true
 
   root_block_device {
