@@ -254,23 +254,17 @@ resource "aws_network_acl" "public" {
   vpc_id     = aws_vpc.main.id
   subnet_ids = aws_subnet.public[*].id
 
-  # Allow HTTP/HTTPS from internet
-  ingress {
-    rule_no    = 100
-    protocol   = "tcp"
-    action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 80
-    to_port    = 80
-  }
-
-  ingress {
-    rule_no    = 110
-    protocol   = "tcp"
-    action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 443
-    to_port    = 443
+  # Allow HTTPS from app subnets only
+  dynamic "ingress" {
+    for_each = local.app_subnet_cidrs
+    content {
+      rule_no    = 100 + ingress.key * 10
+      protocol   = "tcp"
+      action     = "allow"
+      cidr_block = ingress.value
+      from_port  = 443
+      to_port    = 443
+    }
   }
 
   # Allow SSH from bastion allowed IP
@@ -283,14 +277,17 @@ resource "aws_network_acl" "public" {
     to_port    = 22
   }
 
-  # Allow ephemeral ports for return traffic
-  ingress {
-    rule_no    = 130
-    protocol   = "tcp"
-    action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 1024
-    to_port    = 65535
+  # Allow ephemeral ports for return traffic from app subnets
+  dynamic "ingress" {
+    for_each = local.app_subnet_cidrs
+    content {
+      rule_no    = 130 + ingress.key * 10
+      protocol   = "tcp"
+      action     = "allow"
+      cidr_block = ingress.value
+      from_port  = 1024
+      to_port    = 65535
+    }
   }
 
   # Allow outbound to internet
@@ -313,29 +310,16 @@ resource "aws_network_acl" "private_app" {
   vpc_id     = aws_vpc.main.id
   subnet_ids = aws_subnet.private_app[*].id
 
-  # Allow traffic from public subnets (ALB communication)
+  # Allow return traffic from database subnets (ephemeral ports)
   dynamic "ingress" {
-    for_each = local.public_subnet_cidrs
+    for_each = local.database_subnet_cidrs
     content {
       rule_no    = 100 + ingress.key * 10
-      protocol   = "-1"
+      protocol   = "tcp"
       action     = "allow"
       cidr_block = ingress.value
-      from_port  = 0
-      to_port    = 0
-    }
-  }
-
-  # Allow traffic from other app subnets
-  dynamic "ingress" {
-    for_each = local.app_subnet_cidrs
-    content {
-      rule_no    = 150 + ingress.key * 10
-      protocol   = "-1"
-      action     = "allow"
-      cidr_block = ingress.value
-      from_port  = 0
-      to_port    = 0
+      from_port  = 1024
+      to_port    = 65535
     }
   }
 
@@ -362,18 +346,6 @@ resource "aws_network_acl" "private_app" {
     }
   }
 
-  # Allow outbound ephemeral to database subnets for established connections
-  dynamic "egress" {
-    for_each = local.database_subnet_cidrs
-    content {
-      rule_no    = 130 + egress.key * 10
-      protocol   = "tcp"
-      action     = "allow"
-      cidr_block = egress.value
-      from_port  = 1024
-      to_port    = 65535
-    }
-  }
 
   # Allow outbound to public subnets (NAT gateway)
   dynamic "egress" {
@@ -388,18 +360,6 @@ resource "aws_network_acl" "private_app" {
     }
   }
 
-  # Allow outbound to other app subnets
-  dynamic "egress" {
-    for_each = local.app_subnet_cidrs
-    content {
-      rule_no    = 190 + egress.key * 10
-      protocol   = "-1"
-      action     = "allow"
-      cidr_block = egress.value
-      from_port  = 0
-      to_port    = 0
-    }
-  }
 
   # Allow outbound to internet (via NAT gateway)
   egress {
