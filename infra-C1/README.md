@@ -6,37 +6,48 @@ This stack deploys the networking infrastructure that is the foundation for the 
 
 ### Public Subnets
 ```mermaid
-graph TB
-    Internet((Internet))
-    IGW[aws_internet_gateway.main]
-    PubA[Public Subnet A 10.0.0.0/28]
-    PubB[Public Subnet B 10.0.0.16/28]
-    Bastion[aws_instance.bastion]
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#FF9900', 'primaryBorderColor': '#D68000', 'lineColor': '#FF9900', 'fontSize': '14px'}}}%%
+graph TD
+    Internet(("Internet"))
+    IGW[Internet Gateway]
+    PubA[Public Subnet A<br/><code>10.0.0.0/28</code>]
+    PubB[Public Subnet B<br/><code>10.0.0.16/28</code>]
+    Bastion[Bastion Host<br/><small>EC2 instance</small>]
 
-    Internet --> IGW
+    Internet -->|HTTPS/SSH| IGW
     IGW --> PubA
     IGW --> PubB
-    PubA --> Bastion
-    PubB --> Bastion
+    PubA -->|SSH| Bastion
+    PubB -->|SSH| Bastion
+
+    classDef internet fill:#E8F5E9E,stroke:#AED581,stroke-width:3px,color:#000;
+    classDef aws fill:#FFF4E5,stroke:#FF9900,stroke-width:3px,color:#232F3E;
+    classDef subnet fill:#E3F2FD,stroke:#1976D2,stroke-width:3px,rx:10,ry:10;
+    classDef ec2 fill:#FFEDD1,stroke:#F58536,stroke-width:3px,rx:8,ry:8;
+
+    class Internet internet
+    class IGW aws
+    class PubA,PubB subnet
+    class Bastion ec2
 ```
 
 ### Private Subnets
-```mermaid
 graph TB
-    AppA[Private App Subnet A 10.0.0.32/27]
-    AppB[Private App Subnet B 10.0.0.64/27]
-    DBA[Private DB Subnet A 10.0.0.96/27]
-    DBB[Private DB Subnet B 10.0.0.128/27]
-    NAT[aws_nat_gateway.main]
+    AppA[App Subnet A<br/><small><code>10.0.0.32/27</code></small>]
+    AppB[App Subnet B<br/><small><code>10.0.0.64/27</code></small>]
+    DBA[Database Subnet A<br/><small><code>10.0.0.96/27</code></small>]
+    DBB[Database Subnet B<br/><small><code>10.0.0.128/27</code></small>]
+    
+    NAT[NAT Gateway]
     Internet((Internet))
 
-    AppA --> NAT
-    AppB --> NAT
+    AppA -->|outbound internet| NAT
+    AppB -->|outbound internet| NAT
     NAT --> Internet
-    AppA --> DBA
-    AppA --> DBB
-    AppB --> DBA
-    AppB --> DBB
+    AppA -->|app → db traffic| DBA
+    AppA -->|app → db traffic| DBB
+    AppB -->|app → db traffic| DBA
+    AppB -->|app → db traffic| DBB
 ```
 
 ## Networking & CIDR Overview

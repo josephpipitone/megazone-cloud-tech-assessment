@@ -13,16 +13,17 @@ This stack deploys the application layer on top of the existing infrastructure. 
 ```mermaid
 graph TB
     Internet((Internet))
-    ALB[Application Load Balancer]
-    EC2_1[EC2 Instance 1]
-    EC2_2[EC2 Instance 2]
-    RDS[RDS PostgreSQL]
+    ALB[Application Load Balancer<br/><small>Public-facing</small>]
+    EC2_1[EC2 Instance 1<br/><small>in Private App Subnet A</small>]
+    EC2_2[EC2 Instance 2<br/><small>in Private App Subnet B</small>]
+    RDS[RDS PostgreSQL<br/><small>Multi-AZ · Private DB Subnets</small>]
 
-    Internet --> ALB
-    ALB --> EC2_1
-    ALB --> EC2_2
-    EC2_1 --> RDS
-    EC2_2 --> RDS
+    Internet -->|HTTPS| ALB
+    ALB -->|HTTP| EC2_1
+    ALB -->|HTTP| EC2_2
+
+    EC2_1 -->|PostgreSQL 5432| RDS
+    EC2_2 -->|PostgreSQL 5432| RDS
 ```
 
 ## Input Variables
