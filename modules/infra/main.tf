@@ -25,8 +25,7 @@ module "subnet_addrs" {
 }
 
 locals {
-  environment           = var.environment
-  env_suffix            = local.environment == "production" ? "prod" : "nonprod"
+  env_suffix            = var.environment == "production" ? "prod" : "nonprod"
   base_name             = var.name_prefix
   public_subnet_cidrs   = [for s in aws_subnet.public : s.cidr_block]
   app_subnet_cidrs      = [for s in aws_subnet.private_app : s.cidr_block]
@@ -37,7 +36,6 @@ resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr
   tags = {
     Name        = var.vpc_name
-    Environment = local.environment
   }
 }
 
@@ -48,7 +46,6 @@ resource "aws_subnet" "public" {
   availability_zone = var.azs[count.index]
   tags = {
     Name        = "${local.base_name}-public-${var.azs[count.index]}-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -59,7 +56,6 @@ resource "aws_subnet" "private_app" {
   availability_zone = var.azs[count.index]
   tags = {
     Name        = "${local.base_name}-private-app-${var.azs[count.index]}-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -70,7 +66,6 @@ resource "aws_subnet" "private_database" {
   availability_zone = var.azs[count.index]
   tags = {
     Name        = "${local.base_name}-private-database-${var.azs[count.index]}-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -78,7 +73,6 @@ resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
   tags = {
     Name        = "${local.base_name}-igw-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -87,7 +81,6 @@ resource "aws_eip" "nat" {
   domain = "vpc"
   tags = {
     Name        = "${local.base_name}-nat-eip-${count.index + 1}-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -97,7 +90,6 @@ resource "aws_nat_gateway" "main" {
   subnet_id     = aws_subnet.public[count.index].id
   tags = {
     Name        = "${local.base_name}-nat-gw-${count.index + 1}-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -109,7 +101,6 @@ resource "aws_route_table" "public" {
   }
   tags = {
     Name        = "${local.base_name}-public-rt-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -128,7 +119,6 @@ resource "aws_route_table" "private_app" {
   }
   tags = {
     Name        = "${local.base_name}-private-app-rt-${count.index + 1}-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -144,7 +134,6 @@ resource "aws_route_table" "private_database" {
   # No internet route - database subnets should not have outbound internet access
   tags = {
     Name        = "${local.base_name}-private-database-rt-${count.index + 1}-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -177,7 +166,6 @@ resource "aws_security_group" "alb" {
   }
   tags = {
     Name        = "${local.base_name}-alb-sg-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -204,7 +192,6 @@ resource "aws_security_group" "app" {
   }
   tags = {
     Name        = "${local.base_name}-app-sg-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -225,7 +212,6 @@ resource "aws_security_group" "database" {
   }
   tags = {
     Name        = "${local.base_name}-database-sg-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -246,7 +232,6 @@ resource "aws_security_group" "bastion" {
   }
   tags = {
     Name        = "${local.base_name}-bastion-sg-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -302,7 +287,6 @@ resource "aws_network_acl" "public" {
 
   tags = {
     Name        = "${local.base_name}-public-nacl-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -371,7 +355,6 @@ resource "aws_network_acl" "private_app" {
 
   tags = {
     Name        = "${local.base_name}-private-app-nacl-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -446,7 +429,6 @@ resource "aws_network_acl" "private_database" {
 
   tags = {
     Name        = "${local.base_name}-private-database-nacl-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -465,7 +447,6 @@ resource "aws_instance" "bastion" {
 
   tags = {
     Name        = "${local.base_name}-bastion-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
