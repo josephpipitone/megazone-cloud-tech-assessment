@@ -13,7 +13,7 @@ graph TD
     PubB[Public Subnet B<br/><small><code>10.0.0.16/28</code></small>]
     Bastion[Bastion Host<br/><small><code>EC2 instance</code></small>]
 
-    Internet -->|HTTPS/SSH| IGW
+    Internet -->|SSH| IGW
     IGW --> PubA
     IGW --> PubB
     PubA -->|SSH| Bastion
