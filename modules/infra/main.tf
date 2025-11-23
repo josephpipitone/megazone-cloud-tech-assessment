@@ -239,6 +239,26 @@ resource "aws_network_acl" "public" {
   vpc_id     = aws_vpc.main.id
   subnet_ids = aws_subnet.public[*].id
 
+  # Allow HTTP from internet (for ALB)
+  ingress {
+    rule_no    = 90
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 80
+    to_port    = 80
+  }
+
+  # Allow HTTPS from internet (for ALB)
+  ingress {
+    rule_no    = 95
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 443
+    to_port    = 443
+  }
+
   # Allow HTTPS from app subnets only
   dynamic "ingress" {
     for_each = local.app_subnet_cidrs
@@ -304,6 +324,19 @@ resource "aws_network_acl" "private_app" {
   vpc_id     = aws_vpc.main.id
   subnet_ids = aws_subnet.private_app[*].id
 
+  # Allow HTTP from public subnets (ALB to EC2 instances)
+  dynamic "ingress" {
+    for_each = local.public_subnet_cidrs
+    content {
+      rule_no    = 80 + ingress.key * 5
+      protocol   = "tcp"
+      action     = "allow"
+      cidr_block = ingress.value
+      from_port  = 80
+      to_port    = 80
+    }
+  }
+
   # Allow return traffic from database subnets (ephemeral ports)
   dynamic "ingress" {
     for_each = local.database_subnet_cidrs
@@ -325,6 +358,19 @@ resource "aws_network_acl" "private_app" {
     cidr_block = "0.0.0.0/0"
     from_port  = 0
     to_port    = 0
+  }
+
+  # Allow outbound ephemeral responses to public subnets (EC2 to ALB)
+  dynamic "egress" {
+    for_each = local.public_subnet_cidrs
+    content {
+      rule_no    = 180 + egress.key * 5
+      protocol   = "tcp"
+      action     = "allow"
+      cidr_block = egress.value
+      from_port  = 1024
+      to_port    = 65535
+    }
   }
 
   # Allow outbound to database subnets
