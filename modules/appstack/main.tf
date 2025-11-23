@@ -15,8 +15,7 @@ data "aws_ami" "amazon_linux" {
 }
 
 locals {
-  environment = var.environment
-  env_suffix = local.environment == "production" ? "prod" : "nonprod"
+  env_suffix = var.environment == "production" ? "prod" : "nonprod"
   base_name   = var.name_prefix
 }
 
@@ -32,9 +31,6 @@ resource "random_password" "main" {
 
 resource "aws_secretsmanager_secret" "main" {
   name = var.db_secret_name
-  tags = {
-    Environment = local.environment
-  }
 }
 
 resource "aws_secretsmanager_secret_version" "main" {
@@ -47,9 +43,6 @@ resource "aws_secretsmanager_secret_version" "main" {
 
 resource "aws_secretsmanager_secret" "connection_string" {
   name = "${var.db_secret_name}-connection-string"
-  tags = {
-    Environment = local.environment
-  }
 }
 
 resource "aws_secretsmanager_secret_version" "connection_string" {
@@ -77,9 +70,6 @@ resource "aws_iam_policy" "secretsmanager" {
         ]
     }
     EOF
-  tags = {
-    Environment = local.environment
-  }
 }
 
 resource "aws_iam_role" "main" {
@@ -98,9 +88,6 @@ resource "aws_iam_role" "main" {
         ]
     }
     EOF
-  tags = {
-    Environment = local.environment
-  }
 }
 
 resource "aws_iam_instance_profile" "main" {
@@ -121,7 +108,6 @@ resource "aws_lb" "main" {
   subnets            = var.public_subnet_ids
   tags = {
     Name        = "${local.base_name}-alb-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -132,9 +118,6 @@ resource "aws_lb_target_group" "main" {
   vpc_id   = data.aws_vpc.main.id
   health_check {
     path = "/"
-  }
-  tags = {
-    Environment = local.environment
   }
 }
 
@@ -188,7 +171,6 @@ resource "aws_launch_template" "main" {
 
   tags = {
     Name        = "${local.base_name}-asg-instance-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -208,11 +190,6 @@ resource "aws_autoscaling_group" "main" {
   tag {
     key                 = "Name"
     value               = "${local.base_name}-asg-instance-${local.env_suffix}"
-    propagate_at_launch = true
-  }
-  tag {
-    key                 = "Environment"
-    value               = local.environment
     propagate_at_launch = true
   }
 }
@@ -235,7 +212,6 @@ resource "aws_db_subnet_group" "main" {
   subnet_ids = var.database_subnet_ids
   tags = {
     Name        = "${local.base_name}-db-subnet-group-${local.env_suffix}"
-    Environment = local.environment
   }
 }
 
@@ -254,6 +230,5 @@ resource "aws_db_instance" "main" {
 
   tags = {
     Name        = "${local.base_name}-rds-${local.env_suffix}"
-    Environment = local.environment
   }
 }

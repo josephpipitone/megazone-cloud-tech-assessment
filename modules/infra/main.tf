@@ -262,7 +262,7 @@ resource "aws_network_acl" "public" {
     to_port    = 22
   }
 
-  # Allow ephemeral ports for return traffic from app subnets
+  # Allow all ports for traffic from app subnets (outbound and return)
   dynamic "ingress" {
     for_each = local.app_subnet_cidrs
     content {
@@ -270,9 +270,19 @@ resource "aws_network_acl" "public" {
       protocol   = "tcp"
       action     = "allow"
       cidr_block = ingress.value
-      from_port  = 1024
+      from_port  = 0
       to_port    = 65535
     }
+  }
+
+  # Allow ephemeral ports for return traffic from internet
+  ingress {
+    rule_no    = 190
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 1024
+    to_port    = 65535
   }
 
   # Allow outbound to internet
@@ -310,11 +320,11 @@ resource "aws_network_acl" "private_app" {
   # Allow ephemeral ports for return traffic (NAT gateway responses)
   ingress {
     rule_no    = 180
-    protocol   = "tcp"
+    protocol   = "-1"
     action     = "allow"
     cidr_block = "0.0.0.0/0"
-    from_port  = 1024
-    to_port    = 65535
+    from_port  = 0
+    to_port    = 0
   }
 
   # Allow outbound to database subnets
