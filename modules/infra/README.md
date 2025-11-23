@@ -35,7 +35,7 @@ This module deploys a secure, multi-AZ VPC networking infrastructure including p
 
 **Note:** Example:
 ```hcl
-`subnet_config = [
+subnet_config = [
   {
     name     = "public-a"
     new_bits = 8
