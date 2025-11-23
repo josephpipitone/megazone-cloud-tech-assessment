@@ -258,7 +258,7 @@ resource "aws_network_acl" "public" {
   dynamic "ingress" {
     for_each = local.app_subnet_cidrs
     content {
-      rule_no    = 100 + ingress.key * 10
+      rule_no    = 100 + ingress.key * 20
       protocol   = "tcp"
       action     = "allow"
       cidr_block = ingress.value
@@ -269,7 +269,7 @@ resource "aws_network_acl" "public" {
 
   # Allow SSH from bastion allowed IP
   ingress {
-    rule_no    = 120
+    rule_no    = 180
     protocol   = "tcp"
     action     = "allow"
     cidr_block = var.bastion_allowed_ip
@@ -281,7 +281,7 @@ resource "aws_network_acl" "public" {
   dynamic "ingress" {
     for_each = local.app_subnet_cidrs
     content {
-      rule_no    = 130 + ingress.key * 10
+      rule_no    = 200 + ingress.key * 20
       protocol   = "tcp"
       action     = "allow"
       cidr_block = ingress.value
@@ -314,7 +314,7 @@ resource "aws_network_acl" "private_app" {
   dynamic "ingress" {
     for_each = local.database_subnet_cidrs
     content {
-      rule_no    = 100 + ingress.key * 10
+      rule_no    = 100 + ingress.key * 20
       protocol   = "tcp"
       action     = "allow"
       cidr_block = ingress.value
@@ -325,7 +325,7 @@ resource "aws_network_acl" "private_app" {
 
   # Allow ephemeral ports for return traffic (NAT gateway responses)
   ingress {
-    rule_no    = 200
+    rule_no    = 180
     protocol   = "tcp"
     action     = "allow"
     cidr_block = "0.0.0.0/0"
@@ -337,7 +337,7 @@ resource "aws_network_acl" "private_app" {
   dynamic "egress" {
     for_each = local.database_subnet_cidrs
     content {
-      rule_no    = 100 + egress.key * 10
+      rule_no    = 200 + egress.key * 20
       protocol   = "tcp"
       action     = "allow"
       cidr_block = egress.value
@@ -346,12 +346,11 @@ resource "aws_network_acl" "private_app" {
     }
   }
 
-
   # Allow outbound to public subnets (NAT gateway)
   dynamic "egress" {
     for_each = local.public_subnet_cidrs
     content {
-      rule_no    = 160 + egress.key * 10
+      rule_no    = 280 + egress.key * 20
       protocol   = "-1"
       action     = "allow"
       cidr_block = egress.value
@@ -360,10 +359,9 @@ resource "aws_network_acl" "private_app" {
     }
   }
 
-
   # Allow outbound to internet (via NAT gateway)
   egress {
-    rule_no    = 220
+    rule_no    = 380
     protocol   = "-1"
     action     = "allow"
     cidr_block = "0.0.0.0/0"
@@ -385,7 +383,7 @@ resource "aws_network_acl" "private_database" {
   dynamic "ingress" {
     for_each = local.app_subnet_cidrs
     content {
-      rule_no    = 100 + ingress.key * 10
+      rule_no    = 100 + ingress.key * 20
       protocol   = "tcp"
       action     = "allow"
       cidr_block = ingress.value
@@ -398,7 +396,7 @@ resource "aws_network_acl" "private_database" {
   dynamic "ingress" {
     for_each = local.database_subnet_cidrs
     content {
-      rule_no    = 130 + ingress.key * 10
+      rule_no    = 180 + ingress.key * 20
       protocol   = "-1"
       action     = "allow"
       cidr_block = ingress.value
@@ -411,7 +409,7 @@ resource "aws_network_acl" "private_database" {
   dynamic "ingress" {
     for_each = local.app_subnet_cidrs
     content {
-      rule_no    = 160 + ingress.key * 10
+      rule_no    = 260 + ingress.key * 20
       protocol   = "tcp"
       action     = "allow"
       cidr_block = ingress.value
@@ -424,7 +422,7 @@ resource "aws_network_acl" "private_database" {
   dynamic "egress" {
     for_each = local.app_subnet_cidrs
     content {
-      rule_no    = 100 + egress.key * 10
+      rule_no    = 340 + egress.key * 20
       protocol   = "tcp"
       action     = "allow"
       cidr_block = egress.value
@@ -437,7 +435,7 @@ resource "aws_network_acl" "private_database" {
   dynamic "egress" {
     for_each = local.database_subnet_cidrs
     content {
-      rule_no    = 130 + egress.key * 10
+      rule_no    = 420 + egress.key * 20
       protocol   = "-1"
       action     = "allow"
       cidr_block = egress.value
