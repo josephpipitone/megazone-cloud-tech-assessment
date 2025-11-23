@@ -5,8 +5,8 @@ This module deploys a secure, multi-AZ VPC networking infrastructure including p
 ## Resources Created
 
 *   **VPC:** Core VPC with base CIDR.
-*   **Public Subnets:** Internet-facing subnets across AZs with IGW.
-*   **Private App Subnets:** Isolated subnets with NAT for outbound internet.
+*   **Public Subnets:** Internet-facing subnets across AZs with IGW and NAT gateways.
+*   **Private App Subnets:** Isolated subnets with route to NAT gateway for outbound internet.
 *   **Private Database Subnets:** Highly available, no direct internet access.
 *   **Internet Gateway (IGW):** Enables public inbound for bastion.
 *   **NAT Gateways & EIPs:** Per-AZ outbound for private subnets.
